@@ -52,7 +52,7 @@ controller.set_desired(set_speed)
 def preprocess(image, new_row, new_col):
     img = np.asarray(image)
     nrow, ncol, nch = img.shape
-    img_new = img[int(nrow * 0.3) : nrow - 25, 0 : ncol]
+    img_new = img[int(nrow * 0.25) : nrow - 25, 0 : ncol]
     img_new = cv2.resize(img_new,(new_col,new_row), interpolation=cv2.INTER_AREA)
     return img_new
 
