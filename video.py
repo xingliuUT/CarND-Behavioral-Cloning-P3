@@ -1,3 +1,5 @@
+import imageio
+imageio.plugins.ffmpeg.download()
 from moviepy.editor import ImageSequenceClip
 import argparse
 
@@ -24,4 +26,6 @@ def main():
 
 
 if __name__ == '__main__':
+
     main()
+
