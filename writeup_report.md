@@ -62,7 +62,7 @@ I add dropout layers between convolution layers as well as fully connected layer
 
 The model was trained and validated on different data sets to ensure that the model was not overfitting. The training data draw from the raw data and are processed by modifying brightness, vertical/horizontal shifts, or flipping left/right. The validation data are all the raw data taken with center camera.
 
-The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track. And it was also tested through the simulator on an unseen track to see if it could generalize to road conditions it never saw in the training process.
+The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track (see video.mp4). And it was also tested through the simulator on an unseen track to see if it could generalize to road conditions it never saw in the training process (see video_track2.mp4).
 
 Here's the training and validation MSE loss for the two phases (Phase 1 on the left, Phase 2 on the right). As I shown on the graph, validation loss has the tendency to decrease through most of the training epochs, even though the value could oscillate.
 
