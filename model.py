@@ -37,7 +37,7 @@ def xy_translation(img, steer, dfactor):
     tY = dfactor * 0.2 * nrow * random.uniform(-1., 1.) 
     Mtrans = np.float32([[1,0,tX], [0,1,tY]])
     img_new = cv2.warpAffine(img, Mtrans,(ncol, nrow))
-    # adjust the steering angle by adding 0.004 every pixel shifted to the right
+    # adjust the steering angle by adding 0.004 every pixel shifted to the left
     steer_new = steer + tX * .004
 
     return img_new, steer_new
