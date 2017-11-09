@@ -1,7 +1,4 @@
-#**Behavioral Cloning** 
-
-
-**Behavioral Cloning Project**
+# Behavioral Cloning Project
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -13,13 +10,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./graphs/train_loss_0.png "overfitting"
+[image2]: ./graphs/train_loss_success0.png "success0"
+[image3]: ./graphs/train_loss_success1.png "success1"
+[image4]: ./graphs/brightness.png "bright"
+[image5]: ./graphs/translation.png "translation"
+[image6]: ./graphs/flip.png "flip"
+[image7]: ./graphs/crop_resize.png "crop"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -57,15 +54,20 @@ I use ELU activation for both convolution layers and the hidden fully connected 
 
 #### 2. Attempts to reduce overfitting in the model
 
-Initial attempts with training with extact NVIDIA architecture show that the model would overfit. I add dropout layers between layers to reduce overfitting. 
+Initial attempts with training with extact NVIDIA architecture show that the model would overfit. Here is a graph for training and validation loss over the training epochs for a model I trained with the original NVIDIA architecture with no dropout layers:
 
-image of overfitting: 0.2
+![alt text][image1]
+
+I add dropout layers between convolution layers as well as fully connected layers to reduce overfitting.
 
 The model was trained and validated on different data sets to ensure that the model was not overfitting. The training data draw from the raw data and are processed by modifying brightness, vertical/horizontal shifts, or flipping left/right. The validation data are all the raw data taken with center camera.
 
 The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track. And it was also tested through the simulator on an unseen track to see if it could generalize to road conditions it never saw in the training process.
 
-Visualization plot here
+Here's the training and validation MSE loss for the two phases (Phase 1 on the left, Phase 2 on the right). As I shown on the graph, validation loss has the tendency to decrease through most of the training epochs, even though the value could oscillate.
+
+![alt text][image2]
+![alt text][image3]
 
 #### 3. Model parameter tuning
 
@@ -99,9 +101,7 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 #### 2. Final Model Architecture
 
-The final model architecture consisted of a convolution neural network with the following layers and layer sizes ...
-
-model table
+The final model architecture consisted of a convolution neural network with the following layers and layer sizes:
 
 | Layer Type | Output Shape | Params | Activation | 
 |:----------:|:------------:|:------:|:----------:| 
@@ -123,9 +123,6 @@ model table
 | Dropout | ( , 10) | 0 | None |
 | Fully Connected | ( , 1 ) | 0 | ELU |
 
-
-![alt text][image1]
-
 #### 3. Training Dataset & Training Process
 
 I used the dataset provided by the Udacity course website as my training dataset.
@@ -134,23 +131,25 @@ To augment the data sat, I applied three methods: brightness augmentation, trans
 
 For each training image, I convert the image into HSV space and apply a random multiplier between 0.7 to 1.3 to its V channel. Then I convert the image back into the RGB color space. Here are examples:
 
-image for brightness
+![alt text][image4]
 
 I also apply random translation along x and y axis by applying the cv2.warpAffine function with a translation Matrix: [[1, 0, tX], [0, 1, tY]]. The range I set up for horizontal shifts is smaller than 30% of total width both to the left and right. The range for verticle shifts is 6% of total height both to up and down. Along with any horizontal shifts, I add 0.004 to each pixel the image is shifted to the left. Here are examples:
 
-images for shifts
+![alt text][image5]
 
 Finally, I flipped images and angles thinking that this would remove any bias of a particular direction that the model would be trained from data with unbalanced steering angle. For example, here is an image that has then been flipped:
 
-images for fliping
+![alt text][image6]
 
 After the collection process, I use a Python generator so that I could have unlimited number of data points. I then preprocessed this data by cropping away the top 1/4 of the image to remove the distracting sky as well as the bottom 25 rows occupied by the front hood of the car. I then resize the image to match the input image dimension that NVIDIA model uses. Here's an example:
 
-image for crop
+![alt text][image7]
 
 I finally used all the images in the raw dataset as validation. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 for each phase as evidenced by the following train/valid loss plot.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was about 7 for each phase as evidenced by the following train/valid loss plot.
 
-images for two phases train/loss plot
+![alt text][image2]
+![alt text][image3]
+
 I used an adam optimizer so that manually training the learning rate wasn't necessary during each phase of training.
