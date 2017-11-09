@@ -59,6 +59,8 @@ I use ELU activation for both convolution layers and the hidden fully connected 
 
 Initial attempts with training with extact NVIDIA architecture show that the model would overfit. I add dropout layers between layers to reduce overfitting. 
 
+image of overfitting: 0.2
+
 The model was trained and validated on different data sets to ensure that the model was not overfitting. The training data draw from the raw data and are processed by modifying brightness, vertical/horizontal shifts, or flipping left/right. The validation data are all the raw data taken with center camera.
 
 The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track. And it was also tested through the simulator on an unseen track to see if it could generalize to road conditions it never saw in the training process.
@@ -124,30 +126,31 @@ model table
 
 ![alt text][image1]
 
-#### 3. Creation of the Training Set & Training Process
+#### 3. Training Dataset & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+I used the dataset provided by the Udacity course website as my training dataset.
 
-![alt text][image2]
+To augment the data sat, I applied three methods: brightness augmentation, translations and left/right flips.
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+For each training image, I convert the image into HSV space and apply a random multiplier between 0.7 to 1.3 to its V channel. Then I convert the image back into the RGB color space. Here are examples:
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+image for brightness
 
-Then I repeated this process on track two in order to get more data points.
+I also apply random translation along x and y axis by applying the cv2.warpAffine function with a translation Matrix: [[1, 0, tX], [0, 1, tY]]. The range I set up for horizontal shifts is smaller than 30% of total width both to the left and right. The range for verticle shifts is 6% of total height both to up and down. Along with any horizontal shifts, I add 0.004 to each pixel the image is shifted to the left. Here are examples:
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+images for shifts
 
-![alt text][image6]
-![alt text][image7]
+Finally, I flipped images and angles thinking that this would remove any bias of a particular direction that the model would be trained from data with unbalanced steering angle. For example, here is an image that has then been flipped:
 
-Etc ....
+images for fliping
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+After the collection process, I use a Python generator so that I could have unlimited number of data points. I then preprocessed this data by cropping away the top 1/4 of the image to remove the distracting sky as well as the bottom 25 rows occupied by the front hood of the car. I then resize the image to match the input image dimension that NVIDIA model uses. Here's an example:
 
+image for crop
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+I finally used all the images in the raw dataset as validation. 
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 for each phase as evidenced by the following train/valid loss plot.
+
+images for two phases train/loss plot
+I used an adam optimizer so that manually training the learning rate wasn't necessary during each phase of training.
