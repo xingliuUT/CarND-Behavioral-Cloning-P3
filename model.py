@@ -167,8 +167,7 @@ def build_model(drop_prob = 0.1, show_model = False):
     model.add(Dense(1, init = 'he_normal', name = 'full4'))
 
     if show_model:
-        with open('report.txt','w') as f:
-            model.summary(print_fn = lambda x: f.write(x + '\n'))
+        model.summary()
 
     return model
 
@@ -186,9 +185,6 @@ steer_correction = {'left': 0.2, 'center' : 0., 'right' : -0.2}
 new_row = 66
 new_col = 200
 
-# use a drop probability of 20%
-drop_prob = 0.2
-
 # total number of phases to train model
 n_phases = 2
 
@@ -197,10 +193,16 @@ i = 0
 
 # train_cont = True means the training phase is continued from a previous model
 train_cont = [False, True]
+
 # number of epochs for each phase
-epochs = [15, 10]
+epochs = [10, 10]
+
 # train with 50% of images with angle < filter_angle for the first phase, 30% the second
 filter_ratio = [0.5, 0.3]
+
+# use a drop probability of 20%
+drop_prob = [0.2, 0.3]
+
 batch_size = 128
 
 # a ModelCheckpoint is used to save weights of the model only when validation loss improves 
